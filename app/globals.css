@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './var.css';
+
+@font-face {
+  font-family: 'DINPro';
+  src: url(/fonts/DINPro-Regular.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'DINPro-Black';
+  src: url(/fonts/DINPro-Black.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'DINPro-Bold';
+  src: url(/fonts/DINPro-Bold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'DINPro-Light';
+  src: url(/fonts/DINPro-Light.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'DINPro-Medium';
+  src: url(/fonts/DINPro-Medium.otf) format('opentype');
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #f5f8f7;
+  font-family: 'DINPro';
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-primary {
+    color: var(--primary);
+  }
+  .text-warning {
+    color: var(--warning);
+  }
+  .text-weak {
+    color: var(--weak);
+  }
+  .text-link {
+    color: var(--link);
+  }
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  .text-12 {
+    @apply text-[12px];
+  }
+}
+
+:root {
+  .ant-form-item-label {
+    text-align: start !important;
+    display: flex;
+  }
+  .ant-modal-confirm-btns {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+  .ant-modal-confirm-paragraph {
+    gap: 16px !important;
+  }
+  .checkable-tag {
+    /* background-color: #f1f2f5;
+    @apply p-2;
+    &.ant-tag-checkable-checked {
+      background-color: var(--primary);
+    } */
+  }
+  .bg-section {
+    @apply bg-[#F5F8F7] rounded-[8px] p-2;
+  }
+}
+
+.system-section {
+  @apply mb-[26px];
+}
+.system-header {
+  @apply text-[20px] font-semibold flex items-center gap-[24px];
+}
