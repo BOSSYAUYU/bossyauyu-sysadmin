@@ -12,11 +12,11 @@ const AuthLayout = ({ children }: Props) => {
     <Auth>
       <div className="h-[100vh] flex flex-col">
         <div className="h-[72px] flex-shrink-0">
-          <Header></Header>
+          <Header />
         </div>
         <div className="flex-1 flex">
           <div className="w-[120px] flex-shrink-0">
-            <Nav></Nav>
+            <Nav />
           </div>
           <div className="flex-1 overflow-hidden overflow-y-auto bg-white rounded-tl-[32px] rounded-tr-[32px] p-[32px]">
             {children}
