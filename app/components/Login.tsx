@@ -1,13 +1,17 @@
-'use client';
+"use client";
 
-import { Form, Input, Button } from 'antd';
-import CryptoJS from 'crypto-js';
-import { login } from '@/app/utils/services';
-import { useRouter } from 'next/navigation';
+import { Form, Input, Button } from "antd";
+import CryptoJS from "crypto-js";
+import { login } from "@/app/utils/services";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/app/store/user";
+import { getMapTreeData } from "@/app/utils/basic";
 
-const SALT = 'tianwanggaidihu';
+const SALT = "tianwanggaidihu";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
 
@@ -15,13 +19,24 @@ const Login = () => {
     const { account, password } = form.getFieldsValue();
     const params = {
       account,
-      password,
-      // password: CryptoJS.enc.Hex.stringify(CryptoJS.MD5(password + SALT)),
+      password: CryptoJS.enc.Hex.stringify(CryptoJS.MD5(password + SALT)),
     };
     const { datas } = await login(params);
-    localStorage.setItem('token', datas?.token);
-    localStorage.setItem('accountId', datas?.accountId);
-    router.replace('/merchant');
+    const { token, accountId, loginName, menuRespList } = datas;
+    localStorage.setItem("token", token);
+    localStorage.setItem("accountId", accountId);
+    localStorage.setItem("loginName", loginName);
+    const menuList = menuRespList.map((item: any) => item.id);
+    localStorage.setItem("menuList", JSON.stringify(menuList));
+    const mapMenuList = getMapTreeData(menuRespList);
+    localStorage.setItem("mapMenuList", JSON.stringify(mapMenuList));
+    dispatch(
+      updateUser({
+        ...datas,
+        mapMenuList,
+      })
+    );
+    router.replace("/merchant");
   };
 
   return (

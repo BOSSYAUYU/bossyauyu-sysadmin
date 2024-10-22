@@ -29,14 +29,17 @@ const LevelItem = (data: {
     });
   }, []);
 
-  const handleEdit = (id: string) => {};
+  const handleEdit = (id: string) => {
+    router.push(`/level/${id}?type=${type}`);
+  };
 
   const handleDelete = (id: string) => {
     confirm({
       title: "確定將該等級刪除嗎？",
-      async onOk() {
-        
-      },
+      okButtonProps: { size: 'middle', danger: true },
+      cancelButtonProps: { size: 'middle' },
+      icon: null,
+      async onOk() {},
     });
   };
 
@@ -44,8 +47,9 @@ const LevelItem = (data: {
     <>
       {modalContext}
       <Button
-        style={{ borderRadius: "20px", marginBottom: "12px" }}
+        style={{ marginBottom: "12px" }}
         type="primary"
+        size="large"
         onClick={() => router.push(`/level/add?type=${type}`)}
       >
         {type === "shop" ? "新增商戶使用等級" : "新增平台管理員等級"}
@@ -55,19 +59,31 @@ const LevelItem = (data: {
           {
             title: "等級名稱",
             dataIndex: "authName",
+            width: '10%',
           },
           {
             title: "具體權限內容",
-            dataIndex: "content",
+            dataIndex: "menuList",
+            width: '80%',
+            render: (v, record) => {
+              return (
+                <div className="flex flex-wrap">
+                  {v.map((item: any) => {
+                    return <span key={item} className="mx-[5px]">{item}</span>;
+                  })}
+                </div>
+              );
+            },
           },
           {
             title: "操作",
             dataIndex: "id",
             align: "center",
+            width: '10%',
             render: (v, record) => (
               <Space size="middle">
-                <a onClick={() => handleEdit(record.id)}>編輯</a>
-                <a onClick={() => handleDelete(record.id)}>刪除</a>
+                <a onClick={() => handleEdit(record.id)} className="text-[#344B7C]">編輯</a>
+                {/* <a onClick={() => handleDelete(record.id)}>刪除</a> */}
               </Space>
             ),
           },

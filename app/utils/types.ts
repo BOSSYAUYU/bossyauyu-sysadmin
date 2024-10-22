@@ -4,25 +4,28 @@ interface SelectOption {
 }
 
 interface User {
-  id: number;
-  loginName: string;
-  email: string;
-  phoneCode: string;
-  phone: string;
-  status: number;
-  createTime: string;
-  balance: number;
-  accountBalance: number;
-  checkEmailFlag: number;
-  buyCount: number;
-  amount: number;
-  sex: number;
-  acceptNotificationsFlag: number;
-  birthday: number;
-  avatarUrl: string;
-  lastLoginTime: number;
-  couponCount: number;
-  domainUrl: string;
+  id?: number;
+  loginName?: string;
+  email?: string;
+  phoneCode?: string;
+  phone?: string;
+  status?: number;
+  createTime?: string;
+  balance?: number;
+  accountBalance?: number;
+  checkEmailFlag?: number;
+  buyCount?: number;
+  amount?: number;
+  sex?: number;
+  acceptNotificationsFlag?: number;
+  birthday?: number;
+  avatarUrl?: string;
+  lastLoginTime?: number;
+  couponCount?: number;
+  domainUrl?: string;
+  menuRespList?: any[];
+  menuList?: any[];
+  mapMenuList?: any[];
 }
 
 type CustomerTabItems = {

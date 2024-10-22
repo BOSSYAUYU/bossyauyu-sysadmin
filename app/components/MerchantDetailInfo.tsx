@@ -20,7 +20,7 @@ import {
   emailInputOption,
   messageOptions,
   mailSendOption,
-  logColumns,
+  commonLogColumns,
 } from "../utils/shopInfo";
 import {
   updateShopCommonInfo,
@@ -31,6 +31,7 @@ import {
   getAuthLevelConfigDetail,
   getShopAuthConfig,
   updateShopAuthConfig,
+  getPageOperationLog,
 } from "@/app/utils/services";
 import {
   getExpireDate,
@@ -46,9 +47,9 @@ import LevelTree from "./LevelTree";
 const { TextArea } = Input;
 const { confirm } = Modal;
 
-export default function Page(data: { type: string }) {
+export default function Page(data: { type: string; authLevel?: string }) {
   const { id } = useParams();
-  const { type } = data;
+  const { type, authLevel } = data;
   const [loading, setLoading] = useState<boolean>(false);
   // 标题 & 入参关联key
   const [signInfo, setSignInfo] = useState<{
@@ -125,11 +126,14 @@ export default function Page(data: { type: string }) {
     menuList: [],
   });
 
+  const [logData, setLogData] = useState<any[]>([]);
+
   useEffect(() => {
     getTitle();
     fetchShopMembers();
     fetchShopTableInfo();
     fetchLevelInfo();
+    fetchLog();
   }, []);
 
   useEffect(() => {
@@ -196,9 +200,19 @@ export default function Page(data: { type: string }) {
     });
   };
 
+  const fetchLog = () => {
+    getPageOperationLog({
+      pageIndex: 1,
+      pageSize: 100,
+      shopCode: id as string,
+    }).then((res) => {
+      setLogData(res.datas.pageDatas);
+    });
+  };
+
   const fetchLevelInfo = () => {
     getPageAuthConfigList({
-      authType: "3",
+      authType: "2",
       menuType: "2",
     }).then((res) => {
       const pageDatas = res.datas.pageDatas.map((item: any) => {
@@ -330,6 +344,9 @@ export default function Page(data: { type: string }) {
   const handleDeleteMember = (id: string) => {
     confirm({
       title: "確定刪除該管理員賬號嗎？",
+      okButtonProps: { size: "middle", danger: true },
+      cancelButtonProps: { size: "middle" },
+      icon: null,
       onOk() {
         const data = memberInfo.memberList.filter(
           (item) => item.frontId !== id
@@ -379,6 +396,8 @@ export default function Page(data: { type: string }) {
       updateShopAuthConfig({
         menuBtnList,
         shopCode: id as string,
+        authType: "2",
+        authLevel,
       })
         .then((res) => {
           if (res.status === 10000) {
@@ -411,6 +430,10 @@ export default function Page(data: { type: string }) {
         params = {
           ...commonParamsInfo,
           ...msgInfo,
+        };
+      } else if (type === "expiration") {
+        params = {
+          ...commonParamsInfo,
         };
       }
       updateShopCommonInfo(params)
@@ -515,6 +538,14 @@ export default function Page(data: { type: string }) {
                     <Radio value={"2"} style={{ display: "flex" }}>
                       <div className="shrink-0">自有域名</div>
                     </Radio>
+                    <Input
+                      style={{ width: "200px", margin: "0 10px" }}
+                      value={personlWebUrl}
+                      onChange={(e: any) => {
+                        onCommonChangeFn(e, "website", "personlWebUrl")
+                      }}
+                    />
+                    <div className="text-[14px]">修改使用有效期：</div>
                     <Select
                       defaultValue="1"
                       style={{ width: 120, marginRight: "10px" }}
@@ -523,6 +554,7 @@ export default function Page(data: { type: string }) {
                         onCommonChangeFn(e, "commonParams", "changeType")
                       }
                     />
+
                     <InputNumber
                       min={0}
                       defaultValue={0}
@@ -803,6 +835,7 @@ export default function Page(data: { type: string }) {
                   style={{ width: "200px" }}
                   options={levelOptions}
                   value={currentLevelSelect}
+                  placeholder="請選擇"
                   onChange={(e: any) =>
                     onCommonChangeFn(e, "level", "currentLevelSelect")
                   }
@@ -821,7 +854,11 @@ export default function Page(data: { type: string }) {
           )}
 
           {type == "log" && (
-            <Table rowKey="id" dataSource={[]} columns={logColumns}></Table>
+            <Table
+              rowKey="id"
+              dataSource={logData}
+              columns={commonLogColumns}
+            ></Table>
           )}
 
           {type !== "log" && (

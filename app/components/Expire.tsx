@@ -4,7 +4,6 @@ import { Spin, Input, Checkbox, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { getShopList } from "@/app/utils/services";
-import { shopDetailListInfo } from "../utils/shopInfo";
 import { useEffect, useState } from "react";
 import { getLastDate } from "../utils/basic";
 
@@ -23,10 +22,10 @@ export default function Page() {
   const [mainTableData, setMainTableData] = useState<any>([]);
   const [commonParams, setCommonParams] = useState<{
     expirationKeyword: string;
-    expirationTypeLis: string[];
+    expirationTypeList: string[];
   }>({
     expirationKeyword: "",
-    expirationTypeLis: [],
+    expirationTypeList: [],
   });
 
   useEffect(() => {
@@ -85,7 +84,6 @@ export default function Page() {
   };
 
   const updateCommonParams = (e: any, key: string) => {
-    console.log(e);
     setCommonParams({
       ...commonParams,
       [key]: e,
@@ -115,7 +113,7 @@ export default function Page() {
         <div className="text-[14px] ">到期產品：</div>
         <Checkbox.Group
           options={option}
-          onChange={(e: any) => updateCommonParams(e, "expirationTypeLis")}
+          onChange={(e: any) => updateCommonParams(e, "expirationTypeList")}
         />
       </div>
       <Spin spinning={loading}>
@@ -128,7 +126,7 @@ export default function Page() {
                   <span>擁有人：{item.shopBelongUserAccount}</span>
                 </div>
                 <div
-                  className="cursor-pointer text-[14px]"
+                  className="cursor-pointer text-[14px] text-[#344B7C]"
                   onClick={() => {
                     handleDetail(item.id);
                   }}

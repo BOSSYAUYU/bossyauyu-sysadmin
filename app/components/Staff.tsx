@@ -66,6 +66,9 @@ export default function Page() {
   const handleDelete = (id: string) => {
     confirm({
       title: "確定將該管理員刪除嗎？",
+      okButtonProps: { size: 'middle', danger: true },
+      cancelButtonProps: { size: 'middle' },
+      icon: null,
       async onOk() {
         setUserDelete({
           adminUserId: id,
@@ -86,15 +89,40 @@ export default function Page() {
           ...item,
           render: (_: any, record: any) => (
             <Space size="middle">
-              <a onClick={() => handleDetail(record.id)}>查看</a>
-              <a onClick={() => handleEdit(record.id)}>編輯</a>
+              <a
+                onClick={() => handleDetail(record.id)}
+                className="text-[#344B7C]"
+              >
+                查看
+              </a>
+              <a
+                onClick={() => handleEdit(record.id)}
+                className="text-[#344B7C]"
+              >
+                編輯
+              </a>
               {record.userStatus === "2" && (
-                <a onClick={() => handleStop(record.id)}>停用</a>
+                <a
+                  onClick={() => handleStop(record.id)}
+                  className="text-[#344B7C]"
+                >
+                  停用
+                </a>
               )}
               {record.userStatus === "1" && (
-                <a onClick={() => handleUse(record.id)}>啟用</a>
+                <a
+                  onClick={() => handleUse(record.id)}
+                  className="text-[#344B7C]"
+                >
+                  啟用
+                </a>
               )}
-              <a onClick={() => handleDelete(record.id)}>刪除</a>
+              <a
+                onClick={() => handleDelete(record.id)}
+                className="text-[#344B7C]"
+              >
+                刪除
+              </a>
             </Space>
           ),
         };
@@ -103,11 +131,13 @@ export default function Page() {
           ...item,
           render: (_: any, record: any) => (
             <div>
-              {record.userStatus === "1"
-                ? "未生效"
-                : record.userStatus === "2"
-                ? "生效中"
-                : "已過期"}
+              {record.userStatus === "1" ? (
+                <span style={{ color: "red" }}>未生效</span>
+              ) : record.userStatus === "2" ? (
+                "生效中"
+              ) : (
+                "已過期"
+              )}
             </div>
           ),
         };

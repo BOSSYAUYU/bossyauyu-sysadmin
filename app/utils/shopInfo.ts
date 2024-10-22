@@ -1,6 +1,6 @@
 export const shopDetailListInfo = [
   {
-    key: "shopLevel",
+    key: "shopLevelName",
     label: "店鋪等級(權限)",
   },
   {
@@ -71,12 +71,12 @@ export const shopDetailListInfo = [
 
 export const shopSearchCheckData = [
   {
-    id: "shopLevel",
+    id: "shopLevelList",
     label: "店鋪等級(權限)：",
     option: [],
   },
   {
-    id: "expiredDateType",
+    id: "expiredDateTypeList",
     label: "店鋪剩餘有效期：",
     option: [
       { label: "剩餘30天以下", value: "1" },
@@ -87,7 +87,7 @@ export const shopSearchCheckData = [
     ],
   },
   {
-    id: "lastDateType",
+    id: "lastDateTypeList",
     label: "最後登錄：",
     option: [
       { label: "30天未登錄", value: "1" },
@@ -96,11 +96,11 @@ export const shopSearchCheckData = [
     ],
   },
   {
-    id: "shopStatus",
+    id: "shopStatusList",
     label: "狀態：",
     option: [
-      { label: "有效", value: "1" },
-      { label: "無效", value: "2" },
+      { label: "有效", value: "2" },
+      { label: "無效", value: "1" },
     ],
   },
 ];
@@ -148,29 +148,6 @@ export const messageOptions = [
   { label: "商戶自定抬頭", value: "2" },
 ];
 
-export const logColumns = [
-  {
-    title: "管理員帳號",
-    dataIndex: "account",
-  },
-  {
-    title: "操作內容",
-    dataIndex: "content",
-  },
-  {
-    title: "時間",
-    dataIndex: "time",
-  },
-  {
-    title: "位置",
-    dataIndex: "position",
-  },
-  {
-    title: "設備",
-    dataIndex: "os",
-  },
-];
-
 export const staffColumns = [
   {
     title: "帳號",
@@ -178,7 +155,7 @@ export const staffColumns = [
   },
   {
     title: "等級",
-    dataIndex: "adminType",
+    dataIndex: "authName",
   },
   {
     title: "最後登錄",
@@ -196,23 +173,52 @@ export const staffColumns = [
 
 export const shopCreateInfo = [
   {
-    label: '擁有人帳號',
-    key: 'account'
+    label: "擁有人帳號",
+    key: "account",
   },
   {
-    label: '登入密碼',
-    key: 'password'
+    label: "登入密碼",
+    key: "password",
   },
   {
-    label: '店鋪網址',
-    key: 'website'
+    label: "店鋪網址",
+    key: "website",
   },
   {
-    label: '店鋪等級',
-    key: 'shopLevel'
+    label: "店鋪等級",
+    key: "shopLevel",
   },
   {
-    label: '店鋪有效期',
-    key: 'plusDay'
+    label: "店鋪有效期",
+    key: "plusDay",
   },
-]
+];
+
+export const commonLogColumns = [
+  {
+    title: "管理員帳號",
+    dataIndex: "createdName",
+    width: "10%",
+  },
+  {
+    title: "操作內容",
+    dataIndex: "opertaionBeforContent",
+    width: "50%",
+    ellipsis: true,
+  },
+  {
+    title: "時間",
+    dataIndex: "createdTime",
+    width: "20%",
+  },
+  {
+    title: "位置",
+    dataIndex: "ipAddr",
+    width: "10%",
+  },
+  {
+    title: "設備",
+    dataIndex: "device",
+    width: "10%",
+  },
+];

@@ -12,8 +12,8 @@
     "docker:all": "npm run docker:build && npm run docker:push"
   },
   "config": {
-    "repo": "47.238.194.175:4567/bossyauyu/bossyauyu-sysadmin-front",
-    "name": "bossyauyu-sysadmin-front"
+    "repo": "47.238.194.175:4567/bossyauyu/bossyauyu-sysadmin",
+    "name": "bossyauyu-sysadmin"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
@@ -30,7 +30,9 @@
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-redux": "^9.1.0",
+    "react-redux": "^9.1.2",
+    "redux": "^5.0.1",
+    "redux-persist": "^6.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

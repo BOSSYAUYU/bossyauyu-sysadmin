@@ -9,11 +9,14 @@ import {
   getAuthLevelConfigDetail,
   getPageAuthConfigList,
   setUserUse,
+  getPageOperationLog,
+  updateUserAuthConfig
 } from "@/app/utils/services";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getInitBtnList, setBtnListData, getTreeData } from "../utils/basic";
 import LevelTree from "./LevelTree";
+import { commonLogColumns } from "../utils/shopInfo";
 
 const { confirm } = Modal;
 
@@ -21,23 +24,25 @@ export default function Page() {
   const router = useRouter();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(false);
+  const [logData, setLogData] = useState<any[]>([]);
   const [baseInfo, setBaseInfo] = useState<{
     userAccount: string;
     lastLoginTime: string;
     userStatus: string;
+    adminType: string;
   }>({
     userAccount: "",
     lastLoginTime: "",
     userStatus: "1",
+    adminType: "",
   });
+  const [menuList, setMenuList] = useState<any[]>([]);
   const [levelInfo, setLevelInfo] = useState<{
     levelOptions: any[];
     currentLevelSelect: string;
-    menuList: any[];
   }>({
     levelOptions: [],
     currentLevelSelect: "",
-    menuList: [],
   });
 
   const [resetPsw, setResetPsw] = useState("");
@@ -70,48 +75,74 @@ export default function Page() {
           value: item.authCode,
         };
       });
-      const currentLevelSelect = pageDatas?.[0]?.value;
       setLevelInfo({
         ...levelInfo,
         levelOptions: pageDatas,
-        currentLevelSelect,
       });
     });
 
     getUserDetail({
       adminUserId: id as string,
     }).then((res) => {
-      const { userAccount, lastLoginTime, userStatus } = res.datas;
+      const { userAccount, lastLoginTime, userStatus, menuRespList, adminType } =
+        res.datas;
       setBaseInfo({
         userAccount,
         lastLoginTime,
         userStatus,
+        adminType
       });
+      const menuList = getInitBtnList(menuRespList, false);
+      setMenuList(menuList);
     });
   };
 
   useEffect(() => {
-    if (!levelInfo.currentLevelSelect) return;
     setLoading(true);
-    getAuthLevelConfigDetail({
-      id: levelInfo.currentLevelSelect,
-    })
-      .then((res) => {
-        const menuList = getInitBtnList(res.datas.menuList, false);
-        onCommonChangeFn(menuList, "menuList");
+    if (!levelInfo.currentLevelSelect) {
+      getUserDetail({
+        adminUserId: id as string,
       })
-      .finally(() => {
-        setLoading(false);
-      });
+        .then((res) => {
+          const { menuRespList } = res.datas;
+
+          const menuList = getInitBtnList(menuRespList, false);
+          setMenuList(menuList);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      getAuthLevelConfigDetail({
+        id: levelInfo.currentLevelSelect,
+      })
+        .then((res) => {
+          const menuList = getInitBtnList(res.datas.menuList, false);
+          setMenuList(menuList);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }, [levelInfo.currentLevelSelect]);
 
   useEffect(() => {
     getInitInfo();
+    getPageOperationLog({
+      pageIndex: 1,
+      pageSize: 100,
+      releationKey: id as string,
+    }).then((res) => {
+      setLogData(res.datas.pageDatas);
+    });
   }, []);
 
   const handleInvalid = () => {
     confirm({
       title: "確定將該用戶設為無效用戶嗎？",
+      okButtonProps: { size: 'middle', danger: true },
+      cancelButtonProps: { size: 'middle' },
+      icon: null,
       async onOk() {
         setUserInvalid({
           adminUserId: id as string,
@@ -137,6 +168,9 @@ export default function Page() {
   const handleDelete = () => {
     confirm({
       title: "確定將該用戶刪除嗎？",
+      okButtonProps: { size: 'middle', danger: true },
+      cancelButtonProps: { size: 'middle' },
+      icon: null,
       async onOk() {
         setUserDelete({
           adminUserId: id as string,
@@ -159,14 +193,29 @@ export default function Page() {
 
   const handleCheckedChange = (data: any, id: number) => {
     const target = setBtnListData(menuList, id, data);
-    onCommonChangeFn(target, "menuList");
+    setMenuList(target);
   };
 
   const handleUpdate = () => {
+    setLoading(true);
     const menuBtnList = getTreeData(menuList);
+    updateUserAuthConfig({
+      menuBtnList,
+      authType: '1',
+      authLevel: baseInfo.adminType,
+      userId: id as string,
+    })
+      .then((res) => {
+        if (res.status === 10000) {
+          message.success("重置成功");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const { levelOptions, currentLevelSelect, menuList } = levelInfo;
+  const { levelOptions, currentLevelSelect } = levelInfo;
   const { userAccount, lastLoginTime, userStatus } = baseInfo;
   return (
     <>
@@ -244,6 +293,7 @@ export default function Page() {
                     onChange={(e: any) =>
                       onCommonChangeFn(e, "currentLevelSelect")
                     }
+                    allowClear
                   ></Select>
                 </div>
                 <div className="flex items-center my-[24px]">
@@ -273,34 +323,8 @@ export default function Page() {
             children: (
               <Table
                 rowKey="id"
-                dataSource={[]}
-                columns={[
-                  {
-                    title: "管理員帳號",
-                    dataIndex: "signStatus",
-                  },
-                  {
-                    title: "操作內容",
-                    dataIndex: "memberAccount",
-                  },
-                  {
-                    title: "時間",
-                    dataIndex: "paymentAmount",
-                    render(v: OrderDetails["couponInfoList"]) {
-                      return v?.map((d) => {
-                        return d.couponName;
-                      });
-                    },
-                  },
-                  {
-                    title: "位置",
-                    dataIndex: "paymentType",
-                  },
-                  {
-                    title: "設備",
-                    dataIndex: "couponInfoList",
-                  },
-                ]}
+                dataSource={logData}
+                columns={commonLogColumns}
               ></Table>
             ),
           },

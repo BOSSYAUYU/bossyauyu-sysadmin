@@ -1,5 +1,6 @@
 "use client";
 
+import CryptoJS from "crypto-js";
 import { Button, Input, Select, Spin, message } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -10,6 +11,8 @@ import {
 import { useRouter } from "next/navigation";
 import { getInitBtnList, setBtnListData, getTreeData } from "../utils/basic";
 import LevelTree from "./LevelTree";
+
+const SALT = "tianwanggaidihu";
 
 export default function Page() {
   const router = useRouter();
@@ -89,14 +92,13 @@ export default function Page() {
     const { account, password } = baseInfo;
     addAdminUser({
       account,
-      password,
+      password: CryptoJS.enc.Hex.stringify(CryptoJS.MD5(password + SALT)),
       menuBtnList,
       adminType: levelInfo.currentLevelSelect
     }).then((res) => {
       if (res.status === 10000) {
-        message.success("新增成功");
         message.success("新增成功，即將返回人員首頁");
-        router.push('/merchant')
+        router.push('/staff')
       }
     });
   };

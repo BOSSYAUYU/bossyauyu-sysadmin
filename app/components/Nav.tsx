@@ -1,37 +1,48 @@
-'use client';
+"use client";
 
-import { Menu } from 'antd';
-import type { MenuProps } from 'antd';
-import { usePathname, useRouter } from 'next/navigation';
+import { Menu } from "antd";
+import type { MenuProps } from "antd";
+import { usePathname, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 
 const Nav = () => {
+  const data = useSelector((state: any) => {
+    return state.user.session;
+  });
   const router = useRouter();
   const pathName = usePathname();
 
+  const menuListId = data.menuList || [];
   const items = [
     {
-      label: '商戶',
-      key: '/merchant',
+      id: 29,
+      label: "商戶",
+      key: "/merchant",
     },
     {
-      label: '到期',
-      key: '/expire',
+      id: 30,
+      label: "到期",
+      key: "/expire",
     },
     {
-      label: '人員',
-      key: '/staff',
+      id: 31,
+      label: "人員",
+      key: "/staff",
     },
     {
-      label: '等級',
-      key: '/level',
+      id: 32,
+      label: "等級",
+      key: "/level",
     },
     {
-      label: '日誌',
-      key: '/log',
+      id: 33,
+      label: "日誌",
+      key: "/log",
     },
   ];
 
-  const handleClick: MenuProps['onClick'] = ({ key }) => {
+  const target = items.filter((item) => menuListId.includes(item.id));
+  const handleClick: MenuProps["onClick"] = ({ key }) => {
     router.push(key);
   };
 
@@ -39,7 +50,7 @@ const Nav = () => {
     <div className="pt-[40px]">
       <Menu
         defaultSelectedKeys={[pathName]}
-        items={items}
+        items={target}
         className="!border-none [&_.ant-menu-item]:text-center"
         onClick={handleClick}
       ></Menu>

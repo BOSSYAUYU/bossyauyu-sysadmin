@@ -16,6 +16,12 @@ export async function login(data: {
   });
 }
 
+export async function loginOut(): Promise<ResponseResult<any>> {
+  return await request({
+    url: "/api/sso/account/logout",
+  });
+}
+
 // 获取用户列表
 export async function getUserList(): Promise<ResponseResult<any>> {
   return await request({
@@ -33,7 +39,6 @@ export async function setUserInvalid(data: {
   });
 }
 
-
 // 设为有效用户
 export async function setUserUse(data: {
   adminUserId: string;
@@ -43,7 +48,6 @@ export async function setUserUse(data: {
     data,
   });
 }
-
 
 // 删除用户
 export async function setUserDelete(data: {
@@ -107,6 +111,15 @@ export async function setShopInvalid(data: {
   });
 }
 
+export async function setShopUse(data: {
+  shopCode: string;
+}): Promise<ResponseResult<any>> {
+  return await request({
+    url: "/api/sso/shop/setUse",
+    data,
+  });
+}
+
 // 删除商户
 export async function deleteShop(data: {
   shopCode: string;
@@ -132,11 +145,12 @@ export async function resetBelongPsw(data: {
 export interface MerchantListSearchParams {
   pageIndex?: number;
   pageSize?: number;
-  shopLevel?: string;
+  shopLevelList?: string;
   lastDateType?: string;
   expiredDateType?: string;
   shopStatus?: string;
   expirationKeyword?: string;
+  search?: string;
 }
 export async function getShopList(
   data: MerchantListSearchParams
@@ -197,7 +211,7 @@ export async function addAdminUser(data: {
     url: "/api/sso/admin/addUser",
     data,
   });
-} 
+}
 
 // 用户详情
 export async function getUserDetail(data: {
@@ -207,7 +221,7 @@ export async function getUserDetail(data: {
     url: "/api/sso/admin/user/detail",
     data,
   });
-} 
+}
 
 // 添加商铺
 export async function addShop(data: {
@@ -221,19 +235,20 @@ export async function addShop(data: {
     url: "/api/sso/admin/addShop",
     data,
   });
-} 
+}
 
 // 基础-新增更新权限
 export async function saveAuthLevelConfig(data: {
   menuBtnList: any[];
   authName: string;
   authType: string;
+  id?: string;
 }): Promise<ResponseResult<any>> {
   return await request({
     url: "/api/sso/auth/config/saveAuthLevelConfig",
     data,
   });
-} 
+}
 
 // 基础-新增更新权限
 export async function getShopAuthConfig(data: {
@@ -245,15 +260,45 @@ export async function getShopAuthConfig(data: {
     url: "/api/sso/auth/config/shopAuthConfig",
     data,
   });
-} 
+}
 
 // 基础-更新店铺权限
 export async function updateShopAuthConfig(data: {
   menuBtnList: any[];
   shopCode: string;
+  authType?: string;
+  authLevel?: string;
 }): Promise<ResponseResult<any>> {
   return await request({
-    url: "/api/sso/auth/config/shopAuthConfig",
+    url: "/api/sso/auth/config/updateShopAuthConfig",
     data,
   });
-} 
+}
+
+// 日志
+export async function getPageOperationLog(data: {
+  pageIndex: number;
+  pageSize: number;
+  operationType?: string;
+  releationKey?: string;
+  shopCode?: string;
+}): Promise<ResponseResult<any>> {
+  return await request({
+    url: "/api/sso/auth/config/getPageOperationLog",
+    data,
+  });
+}
+
+// 更新人員權限
+export async function updateUserAuthConfig(data: {
+  shopCode?: string;
+  userId?: string;
+  authLevel?: string;
+  authType?: string;
+  menuBtnList: any[]
+}): Promise<ResponseResult<any>> {
+  return await request({
+    url: "/api/sso/auth/config/updateUserAuthConfig",
+    data,
+  });
+}

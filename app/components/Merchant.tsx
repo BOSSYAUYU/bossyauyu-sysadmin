@@ -25,6 +25,9 @@ import {
   shopSearchCheckData,
   shopCreateInfo,
 } from "../utils/shopInfo";
+import CryptoJS from "crypto-js";
+
+const SALT = "tianwanggaidihu";
 
 export default function Page() {
   const router = useRouter();
@@ -43,10 +46,11 @@ export default function Page() {
       [id]: data,
     });
   }
-  const [shopSearchCheckOption, setShopSearchCheckOption] = useState<any[]>(shopSearchCheckData)
+  const [shopSearchCheckOption, setShopSearchCheckOption] =
+    useState<any[]>(shopSearchCheckData);
 
   useEffect(() => {
-    getPageAuthConfigList({ authType: "3", menuType: "2" }).then((res) => {
+    getPageAuthConfigList({ authType: "2", menuType: "2" }).then((res) => {
       const pageDatas = res.datas.pageDatas.map((item: any) => {
         return {
           label: item.authName,
@@ -54,15 +58,15 @@ export default function Page() {
         };
       });
       setLevelOptions(pageDatas);
-      const initSearchData = shopSearchCheckData.map(item => {
-        if(item.id === 'shopLevel') {
-          item.option = pageDatas
+      const initSearchData = shopSearchCheckData.map((item) => {
+        if (item.id === "shopLevelList") {
+          item.option = pageDatas;
         }
-        return item
-      })
-      setShopSearchCheckOption(initSearchData)
+        return item;
+      });
+      setShopSearchCheckOption(initSearchData);
       form.setFieldsValue({
-        shopLevel: pageDatas[0].value,
+        shopLevelList: pageDatas[0].value,
       });
     });
   }, []);
@@ -72,7 +76,7 @@ export default function Page() {
     getShopList({
       pageIndex: 1,
       pageSize: 10,
-      expirationKeyword,
+      search: expirationKeyword,
       ...searchParams,
     })
       .then((res) => {
@@ -93,6 +97,7 @@ export default function Page() {
   const onFinish = (fieldsValue: any) => {
     addShop({
       ...fieldsValue,
+      password: CryptoJS.enc.Hex.stringify(CryptoJS.MD5(fieldsValue.password + SALT)),
     }).then((res) => {
       if (res.status === 10000) {
         setVisible(false);
@@ -108,10 +113,14 @@ export default function Page() {
   const [successVisible, setSuccessVisible] = useState<boolean>(false);
   const handleCopy = async () => {
     try {
-      let target = ''
+      let target = "";
       shopCreateInfo.map((item) => {
-        target += `${item.label}:${currentShopinfo[item.key]};`
-      })
+        target += `${item.label}:${
+          item.key === "website"
+            ? currentShopinfo[item.key] + ".oshopoo.com"
+            : currentShopinfo[item.key]
+        };`;
+      });
       await navigator.clipboard.writeText(target);
       message.success("複製成功");
     } catch (err) {
@@ -227,7 +236,8 @@ export default function Page() {
           >
             <div className="flex mb-[30px] items-center">
               <div className="">圖片:</div>
-              <img src="/1.png" className="w-[30px] h-[30px] mx-[10px]" />
+              <img src={item?.backgroundLogoUrl} className="w-[30px] h-[30px] mx-[10px]" />
+              <div className="mx-[10px]">{item.shopBelongUserAccount}</div>
               <div
                 className="text-[#344B7C] cursor-pointer"
                 onClick={() => router.push(`/merchant/${item.shopCode}`)}

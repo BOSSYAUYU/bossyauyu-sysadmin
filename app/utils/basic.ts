@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 export const timestampToDateString = function (timestamp: number) {
   const date = new Date(timestamp);
 
@@ -134,4 +136,28 @@ export const getTreeData = function (arr: any[]) {
     }
   });
   return target;
+};
+
+// 展开树形数据
+export const getMapTreeData = function (arr: any[]) {
+  let target: any[] = [];
+  arr.map((item) => {
+    if (item.menuBtnList) {
+      target = [...target, ...item.menuBtnList];
+    }
+    if (item.childMenuList) {
+      target = [...target, ...getMapTreeData(item.childMenuList)];
+    }
+  });
+  return target;
+};
+
+// 获取按钮权限
+export const UseGetBtnAuthority = function (btnId: number) {
+  const data = useSelector((state: any) => {
+    return state.user.session;
+  });
+  const menuList = data.mapMenuList || [];
+  const index = menuList.findIndex((item: any) => item.id === btnId);
+  return index === -1 ? true : menuList[index].btnStatus !== '2'
 };
