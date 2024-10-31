@@ -526,7 +526,6 @@ export default function Page(data: { type: string; authLevel?: string }) {
                     </Radio>
                     <Input
                       style={{ width: "200px", margin: "0 10px" }}
-                      disabled
                       value={subdomainsWebUrl}
                     />
                     <div className="text-xs">

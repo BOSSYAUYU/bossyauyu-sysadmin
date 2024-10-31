@@ -1,24 +1,18 @@
 "use client";
 
-import { Button, Input, Tabs, message, Modal } from "antd";
-import {
-  getShopDetail,
-  setShopInvalid,
-  setShopUse,
-  deleteShop,
-  resetBelongPsw,
-} from "@/app/utils/services";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { shopDetailListInfo } from "../utils/shopInfo";
+import {Button, Input, message, Modal, Tabs} from "antd";
+import {deleteShop, getShopDetail, resetBelongPsw, setShopInvalid, setShopUse,} from "@/app/utils/services";
+import {useEffect, useState} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {shopDetailListInfo} from "../utils/shopInfo";
 import MerchantDetailInfo from "./MerchantDetailInfo";
-import { UseGetBtnAuthority } from "@/app/utils/basic";
+import {UseGetBtnAuthority} from "@/app/utils/basic";
 
-const { confirm } = Modal;
+const {confirm} = Modal;
 
 export default function Page() {
   const router = useRouter();
-  const { id } = useParams();
+  const {id} = useParams();
 
   const [mainData, setMainData] = useState<any>({});
 
@@ -30,38 +24,38 @@ export default function Page() {
     getShopDetail({
       shopCode: id as string,
     }).then((res) => {
-      const { datas } = res;
+      const {datas} = res;
       setMainData(datas);
     });
   }
- 
+
   function handleInvalid() {
     const status = mainData.shopStatus === "2";
     confirm({
       title: status
         ? "確定將該商戶設為無效商戶嗎？"
         : "確定將該商戶設為有效商戶嗎？",
-      okButtonProps: { size: "middle", danger: true },
-      cancelButtonProps: { size: "middle" },
+      okButtonProps: {size: "middle", danger: true},
+      cancelButtonProps: {size: "middle"},
       icon: null,
       async onOk() {
         status
           ? setShopInvalid({
-              shopCode: id as string,
-            }).then((res) => {
-              if (res.status === 10000) {
-                message.success("更新成功");
-                initData()
-              }
-            })
+            shopCode: id as string,
+          }).then((res) => {
+            if (res.status === 10000) {
+              message.success("更新成功");
+              initData()
+            }
+          })
           : setShopUse({
-              shopCode: id as string,
-            }).then((res) => {
-              if (res.status === 10000) {
-                message.success("更新成功");
-                initData()
-              }
-            });
+            shopCode: id as string,
+          }).then((res) => {
+            if (res.status === 10000) {
+              message.success("更新成功");
+              initData()
+            }
+          });
       },
     });
   }
@@ -69,8 +63,8 @@ export default function Page() {
   function handleDelete() {
     confirm({
       title: "確定刪除該商戶嗎？",
-      okButtonProps: { size: "middle", danger: true },
-      cancelButtonProps: { size: "middle" },
+      okButtonProps: {size: "middle", danger: true},
+      cancelButtonProps: {size: "middle"},
       icon: null,
       async onOk() {
         deleteShop({
@@ -132,7 +126,7 @@ export default function Page() {
         <Button
           size="large"
           onClick={handleInvalid}
-          style={{ fontSize: "14px", marginRight: "16px" }}
+          style={{fontSize: "14px", marginRight: "16px"}}
           disabled={UseGetBtnAuthority(2)}
         >
           {mainData.shopStatus === "2" ? "設為無效商戶" : "設為有效商戶"}
@@ -140,7 +134,7 @@ export default function Page() {
         <Button
           size="large"
           onClick={handleDelete}
-          style={{ fontSize: "14px", marginRight: "16px" }}
+          style={{fontSize: "14px", marginRight: "16px"}}
           disabled={UseGetBtnAuthority(3)}
         >
           刪除商戶
@@ -148,7 +142,7 @@ export default function Page() {
         <Button
           size="large"
           onClick={handleOpen}
-          style={{ fontSize: "14px" }}
+          style={{fontSize: "14px"}}
           disabled={UseGetBtnAuthority(4)}
         >
           手動重置擁有人帳戶跟密碼
@@ -156,7 +150,7 @@ export default function Page() {
       </div>
       <div className="flex mb-[30px] items-center">
         <div className="mr-[10px]">圖片:</div>
-        <img src={mainData?.backgroundLogoUrl} className="w-[30px] h-[30px] mx-[10px]" />
+        <img src={mainData?.backgroundLogoUrl} className="h-[30px] mx-[10px]"/>
       </div>
       <div className="w-[100%] flex flex-wrap mb-[48px] text-sm justify-between">
         {shopDetailListInfo.map((innerItem) => (
@@ -165,7 +159,7 @@ export default function Page() {
             className="w-[30%] mb-[8px] flex justify-between"
           >
             <div>{innerItem.label}</div>
-            <div>{mainData?.[innerItem.key] || "--"}</div>
+            <div>{innerItem.render ? innerItem.render(mainData?.[innerItem.key], mainData) : mainData?.[innerItem.key] || "--"}</div>
           </div>
         ))}
       </div>
@@ -175,27 +169,27 @@ export default function Page() {
             {
               label: "有效期",
               key: "expiration",
-              children: <MerchantDetailInfo type="expiration" />,
+              children: <MerchantDetailInfo type="expiration"/>,
             },
             {
               label: "網址",
               key: "website",
-              children: <MerchantDetailInfo type="website" />,
+              children: <MerchantDetailInfo type="website"/>,
             },
             {
               label: "電郵",
               key: "email",
-              children: <MerchantDetailInfo type="email" />,
+              children: <MerchantDetailInfo type="email"/>,
             },
             {
               label: "短信抬頭",
               key: "message",
-              children: <MerchantDetailInfo type="message" />,
+              children: <MerchantDetailInfo type="message"/>,
             },
             {
               label: "管理帳號",
               key: "manage",
-              children: <MerchantDetailInfo type="manage" />,
+              children: <MerchantDetailInfo type="manage"/>,
             },
             {
               label: "等級",
@@ -210,7 +204,7 @@ export default function Page() {
             {
               label: "記錄",
               key: "log",
-              children: <MerchantDetailInfo type="log" />,
+              children: <MerchantDetailInfo type="log"/>,
             },
           ]}
           size="middle"

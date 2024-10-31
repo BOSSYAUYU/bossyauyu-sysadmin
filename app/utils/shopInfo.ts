@@ -1,11 +1,18 @@
 export const shopDetailListInfo = [
   {
+    key: "shopCode",
+    label: "店鋪編碼",
+  },
+  {
     key: "shopLevelName",
     label: "店鋪等級(權限)",
   },
   {
     key: "shopStatus",
     label: "狀態",
+    render(v) {
+      return v ? ['未生效', '生效中', '已过期'][v] : '--'
+    }
   },
   {
     key: "shopMemberNum",
@@ -26,6 +33,9 @@ export const shopDetailListInfo = [
   {
     key: "subdomainsWebUrl",
     label: "網址",
+    render(v): string {
+      return v + '.oshopoo.com'
+    }
   },
   {
     key: "shopBelongUserId",
@@ -36,7 +46,7 @@ export const shopDetailListInfo = [
     label: "網址有效期",
   },
   {
-    key: "6",
+    key: "shopUserNum",
     label: "管理員數量",
   },
   {
@@ -52,7 +62,7 @@ export const shopDetailListInfo = [
     label: "電郵",
   },
   {
-    key: "3",
+    key: "emaileExpiration",
     label: "電郵有效期",
   },
   {
@@ -60,7 +70,7 @@ export const shopDetailListInfo = [
     label: "短信抬頭",
   },
   {
-    key: "4",
+    key: "phone",
     label: "電話",
   },
   {
@@ -79,45 +89,45 @@ export const shopSearchCheckData = [
     id: "expiredDateTypeList",
     label: "店鋪剩餘有效期：",
     option: [
-      { label: "剩餘30天以下", value: "1" },
-      { label: "剩餘90天以下", value: "2" },
-      { label: "剩餘180天以下", value: "3" },
-      { label: "剩餘180天以上", value: "4" },
-      { label: "剩餘300天以上", value: "5" },
+      {label: "剩餘30天以下", value: "1"},
+      {label: "剩餘90天以下", value: "2"},
+      {label: "剩餘180天以下", value: "3"},
+      {label: "剩餘180天以上", value: "4"},
+      {label: "剩餘300天以上", value: "5"},
     ],
   },
   {
     id: "lastDateTypeList",
     label: "最後登錄：",
     option: [
-      { label: "30天未登錄", value: "1" },
-      { label: "90天未登錄", value: "2" },
-      { label: "180天未登錄", value: "3" },
+      {label: "30天未登錄", value: "1"},
+      {label: "90天未登錄", value: "2"},
+      {label: "180天未登錄", value: "3"},
     ],
   },
   {
     id: "shopStatusList",
     label: "狀態：",
     option: [
-      { label: "有效", value: "2" },
-      { label: "無效", value: "1" },
+      {label: "有效", value: "2"},
+      {label: "無效", value: "1"},
     ],
   },
 ];
 
 export const handleSelectOption = [
-  { value: "1", label: "添加天數" },
-  { value: "2", label: "减少天數" },
+  {value: "1", label: "添加天數"},
+  {value: "2", label: "减少天數"},
 ];
 
 export const mailOption = [
-  { label: "平台電郵", value: "1" },
-  { label: "商戶自定義電郵", value: "2" },
+  {label: "平台電郵", value: "1"},
+  {label: "商戶自定義電郵", value: "2"},
 ];
 
 export const mailSendOption = [
-  { label: "發送電郵", value: true },
-  { label: "不發送電郵", value: false },
+  {label: "發送電郵", value: true},
+  {label: "不發送電郵", value: false},
 ];
 
 export const emailInputOption = [
@@ -144,8 +154,8 @@ export const emailInputOption = [
 ];
 
 export const messageOptions = [
-  { label: "平台抬頭", value: "1" },
-  { label: "商戶自定抬頭", value: "2" },
+  {label: "平台抬頭", value: "1"},
+  {label: "商戶自定抬頭", value: "2"},
 ];
 
 export const staffColumns = [
@@ -203,7 +213,7 @@ export const commonLogColumns = [
   {
     title: "操作內容",
     dataIndex: "opertaionBeforContent",
-    width: "50%",
+    width: "30%",
     ellipsis: true,
   },
   {
@@ -219,6 +229,5 @@ export const commonLogColumns = [
   {
     title: "設備",
     dataIndex: "device",
-    width: "10%",
   },
 ];
